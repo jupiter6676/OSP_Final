@@ -14,31 +14,31 @@ from elasticsearch import Elasticsearch
 crawling
 """
 
-url = requests.get("http://attic.apache.org/")
+url_1 = requests.get("http://attic.apache.org/")
 
-html = BeautifulSoup(url.content, 'html.parser')
-
-
-body = html.select('body')
-
-word = []
+html_1 = BeautifulSoup(url_1.content, 'html.parser')
 
 
-for tag in body:
+body_1 = html_1.select('body')
+
+word_1 = []
+
+
+for tag in body_1:
 	
-	word.append(tag.get_text().strip())
+	word_1.append(tag.get_text().strip())
 
 
 """
 freq
 """
 
-word_list = []
+word_list_1 = []
 
-# word 리스트를 문자열로 변환 후, 공백 기준으로 나누기
-word_list = ''.join(word).lower().split()
+# word_1 리스트를 문자열로 변환 후, 공백 기준으로 나누기
+word_list_1 = ''.join(word_1).lower().split()
 
-# print(word_list)
+# print(word_list_1)
 
 
 # 특수문자 제거
@@ -60,11 +60,11 @@ def clean_word_list(input_list):
 	return output_list
 		
 
-clean_list = []
+clean_list_1 = []
 
-clean_list = clean_word_list(word_list)
+clean_list_1 = clean_word_list(word_list_1)
 
-# print(clean_list)
+# print(clean_list_1)
 
 
 
@@ -73,7 +73,7 @@ def counter(input_list):
 
 	word_count = {}
 	
-	for word in clean_list:
+	for word in input_list:
 
 		if word in  word_count:
 
@@ -85,25 +85,25 @@ def counter(input_list):
 	return word_count
 
 
-word_count = counter(clean_list)
+word_count_1 = counter(clean_list)
 
-word_count = sorted(word_count.items(), key=lambda x:x[1], reverse=True)
+word_count_1 = sorted(word_count_1.items(), key=lambda x:x[1], reverse=True)
 
-#print(word_count)
+#print(word_count_1)
 
 
 
-count = 0
+count_1 = 0
 
-w_list = []
-f_list = []
+w_list_1 = []
+f_list_1 = []
 
 while count < 30:
 
-	w_list.append(word_count[count][0])
-	f_list.append(word_count[count][1])
+	w_list_1.append(word_count_1[count][0])
+	f_list_1.append(word_count_1[count][1])
 
-	count = count + 1
+	count_1 = count_1 + 1
 
-print(w_list)
-print(f_list)
+print(w_list_1)
+print(f_list_1)
