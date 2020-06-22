@@ -1,0 +1,81 @@
+<html>
+    <style>
+        .button{
+            color: #000080;
+            background-color: skyblue;
+            border: 2px solid #48B4E0;
+            padding: 15px 30px;
+            text-align: center;
+            font-size: 20px;
+            border-radius: 50px;
+            float: right;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .right{
+            margin-right: 15px;
+        }
+        hr{
+            border: none;
+            border-top: 3px dotted #6E6E6E;
+            height: 1px;
+            width: 97%;
+        }
+        ul{
+            list-style: none;
+        }
+    </style>
+
+    <head>
+        <title>OSP 07</title>
+    </head>
+
+    <body>
+        <form>
+            <div style = "margin-top: 20px; margin-bottom: 5px; text-align: center;">
+                <font color = "#333399" size = "+3">
+                    Enter the URL&emsp;</font>
+                    <input type = "text" name = "URL" 
+                    size="100" style = "height: 40px;"><br>
+            </div>
+            <div style = "margin-right: 250px;">
+                <input type = "button" class = "button right" name = "no" value = " 취소 " >
+                <input type = "button" class = "button right" name = "yes" value = " 확인 " ><br><br><br>
+            </div>
+        </form>
+        <hr/>
+
+        <font color = "#333399" size = "+3" style="margin-left: 50px">
+            Open Source Project Analysis List</font>
+        <ul>
+            <li><div style="color: #333399; background-color:#DFDFDF;
+                margin-right: 50px; margin-bottom: 10px; font-size: 17px;
+                border-top: 1.5px solid black; line-height: 200%;">
+                    &emsp;&emsp;shiro&emsp;&emsp;URL: https://www.infoq.com/articles/apache-shiro<br>
+                    &emsp;&emsp;Security, Authentication, Authorization, container ...
+            </div></li>
+
+            <li><div style="color: #333399; background-color:#D1F8D5;
+                margin-right: 50px; margin-bottom: 10px; font-size: 17px;
+                border-top: 1.5px solid black; line-height: 200%;">
+                 &emsp;&emsp;kafka&emsp;&emsp;URL: htpps://kafka.apache.org/<br>
+                 &emsp;&emsp;Message, consumer, producer, replication, cluster, messaging ...
+            </div></li>
+
+            <li><div style="color: #333399; background-color:#DFDFDF;
+                margin-right: 50px; margin-bottom: 10px; font-size: 17px;
+                border-top: 1.5px solid black; line-height: 200%;">
+                    &emsp;&emsp;shiro&emsp;&emsp;URL: https://www.infoq.com/articles/apache-shiro<br>
+                    &emsp;&emsp;Security, Authentication, Authorization, container ...
+            </div></li>
+
+            <li><div style="color: #333399; background-color:#D1F8D5;
+                margin-right: 50px; margin-bottom: 10px; font-size: 17px;
+                border-top: 1.5px solid black; line-height: 200%;">
+                 &emsp;&emsp;kafka&emsp;&emsp;URL: htpps://kafka.apache.org/<br>
+                 &emsp;&emsp;Message, consumer, producer, replication, cluster, messaging ...
+            </div></li>
+
+        </ul>
+    </body>
+</html>
