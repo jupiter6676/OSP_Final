@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC “-//W3C//DTD HTML 4.0 Transitional//EN”>
+
+<html>
+    <style>
+        hr{
+            border: none;
+            border-top: 3px dashed black;
+            height: 1px;
+            width: 97%;
+        }
+    </style>
+    <head>
+        <title> OSP Final Project </title>
+    </head>
+    <body>
+            <form method="GET" action="/box">
+            <h3> Enter the URL
+            <input type="text" name="url1">
+            <button type="submit"> Submit </button></h3>
+        </form>
+
+        <form method="POST" action="/txt" enctype="multipart/form-data">
+            <h3> Submit the text file
+            <input type="file" name="file">
+            <button type="submit"> Submit </button></h3>
+        </form>
+
+        <hr>    <!-- 화면 자르기 -->
+        <h3> STATE BAR </h3>
+        <h4> url : {{url1}} </h4>
+        <h4> url : {{url2}} </h4>
+
+    </body>
+</html>
