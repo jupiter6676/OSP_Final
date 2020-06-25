@@ -1,3 +1,4 @@
+ 
 <!DOCTYPE html PUBLIC “-//W3C//DTD HTML 4.0 Transitional//EN”>
 
 <html>
@@ -9,20 +10,30 @@
             width: 97%;
         }
     </style>
+
     <head>
         <title> OSP Final Project </title>
     </head>
+
     <body>
             <form method="GET" action="/box">
+
             <h3> Enter the URL
-            <input type="url" name="url1">
+
+            <input type="text" name="url1">
+
             <button type="submit"> Submit </button></h3>
+
         </form>
 
         <form method="POST" action="/txt" enctype="multipart/form-data">
+
             <h3> Submit the text file
+
             <input type="file" name="file">
+
             <button type="submit"> Submit </button></h3>
+
         </form>
 
         <hr>    <!-- 화면 자르기 -->
