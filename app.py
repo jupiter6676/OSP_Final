@@ -23,6 +23,17 @@ word_d_2 = {}
 sent_list = []
 sent_list_2 = []
 
+# global로 바꾸자
+v1 = []; v2 = []; v3 = []; v4 = []
+dotpro_1 = 0; dotpro_2 = 0; dotpro_3 = 0
+cosSimil_1 = 0; cosSimil_2 = 0; cosSimil_3 = 0
+
+dic = {}
+w_list = []
+tf_list = []
+
+
+
 
 # 특수문자 제거 (공백 제외)
 def clean_word_list(input_list):
@@ -159,6 +170,7 @@ def index():
 
 def box():
 
+	global v1, v2, v3, v4, dotpro_1, dotpro_2, dotpro_3, cosSimil_1, cosSimil_2, cosSimil_3
 	# 1 (기준)
 	url = requests.get("https://nutch.apache.org/")
 	html = BeautifulSoup(url.content, 'html.parser')
@@ -290,7 +302,8 @@ def box():
 
 
 	# tf-idf
-	dic = {}
+	
+	global dic
 	
 	idf_d = compute_idf()
 
@@ -308,8 +321,8 @@ def box():
 
 	count = 0
 
-	w_list = []
-	tf_list = []
+	# w_list = []
+	# tf_list = []
 
 	while count < 10:
 
@@ -317,6 +330,7 @@ def box():
 		tf_list.append(dic[count][1])
 
 		count = count + 1
+
 
 
 	return render_template('home.html', sim1 = cosSimil_1, sim2 = cosSimil_2, sim3 = cosSimil_3, word = w_list, tf = tf_list)
@@ -461,19 +475,13 @@ def txt():
 
 
 
+@app.route('/elastic', methods = ['POST'])
 
+def elastic():
 
-# Elastic
-
-
-es_host = "127.0.0.1"
-es_port = "9200"
-
-
-
-if __name__ == '__main__':
-
-	app.run(debug=True)
+	es_host = "127.0.0.1"
+	es_port = "9200"
+	# http://127.0.0.1:9200/final/project/1?pretty
 
 	es = Elasticsearch([{'host': es_host, 'port': es_port}], timeout=30)
 
@@ -486,21 +494,28 @@ if __name__ == '__main__':
 		"dotpro_1": dotpro_1,
 		"dotpro_2": dotpro_2,
 		"dotpro_3": dotpro_3,
-		"dotpro_4": dotpro_4,
 
 		"cosSimil_1": cosSimil_1,
 		"cosSimil_2": cosSimil_2,
 		"cosSimil_3": cosSimil_3,
-		"cosSimil_4": cosSimil_4,
 
-		"tf-idf": dic,
 		"word list": w_list,
 		"tf-idf list": tf_list
 	}
 
 
-	res = es.index(index="web", doc_type="word", id=1, body=doc)
+	res = es.index(index="final", doc_type="project", id=1, body=doc)
 
+	return render_template('home.html')
+
+
+if __name__ == '__main__':
+
+	
+
+	app.run(debug=True)
+
+	
     # with open(url_for('static'), filename=file) as f:
     #     for line in f:
     #         str = line
