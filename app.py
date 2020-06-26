@@ -10,6 +10,7 @@ import numpy as np
 import math
 import nltk; nltk.download('punkt')
 from nltk import word_tokenize
+from elasticsearch import Elasticsearch
 
 
 app = Flask(__name__, static_url_path='/static')
@@ -323,57 +324,6 @@ def box():
 
 
 
-"""
-#     myurl = request.form['wa']
-
-#     res = requests.get(myurl)
-
-#     html = BeautifulSoup(res.content, 'html.parser')
-
-#     body = html.select('body')
-
-#     word = []
-
-#     for tag in body:
-#         word.append(tag.get_text().strip())
-
-#     # freq
-#     word_list = []
-#     word_list = ''.join(word).lower().split()
-
-#     clean_list = []
-#     clean_list = clean_word_list(word_list)
-
-#     # { '단어' : '빈도수' }
-#     def counter(input_list):
-#         word_count = {}
-
-#         for word in input_list:
-#             if word in word_count:
-#                 word_count[word] += 1
-#             else:
-#                 word_count[word] = 1
-
-#         return word_count
-    
-#     word_count = counter(clean_list)
-#     word_count = sorted(word_count.items(), key=lambda x:x[1], reverse=True)
-
-#     count = 0
-
-#     w_list = []
-#     f_list = []
-    
-#     while count < 30:
-#         w_list.append(word_count[count][0])
-#         f_list.append(word_count[count][1])
-
-#         count = count + 1
-
-#     success = "success"
-
-#     return render_template('page.html', wa=myurl, word_list=w_list, freq=f_list, wc=word_count, status=success)
-"""
 
 # txt 파일 입력
 @app.route('/txt', methods=['POST'])
@@ -510,10 +460,51 @@ def txt():
     return render_template('home.html', sim1 = cosSimil_1, sim2 = cosSimil_2, sim3 = cosSimil_3)
 
 
+
+
+
+# Elastic
+
+
+es_host = "127.0.0.1"
+es_port = "9200"
+
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+
+	app.run(debug=True)
+
+	es = Elasticsearch([{'host': es_host, 'port': es_port}], timeout=30)
+
+	doc = {
+		"v1": v1,
+		"v2": v2,
+		"v3": v3,
+		"v4": v4,
+
+		"dotpro_1": dotpro_1,
+		"dotpro_2": dotpro_2,
+		"dotpro_3": dotpro_3,
+		"dotpro_4": dotpro_4,
+
+		"cosSimil_1": cosSimil_1,
+		"cosSimil_2": cosSimil_2,
+		"cosSimil_3": cosSimil_3,
+		"cosSimil_4": cosSimil_4,
+
+		"tf-idf": dic,
+		"word list": w_list,
+		"tf-idf list": tf_list
+	}
+
+
+	res = es.index(index="web", doc_type="word", id=1, body=doc)
 
     # with open(url_for('static'), filename=file) as f:
     #     for line in f:
     #         str = line
     #         arr = str.split('\n')
+
+
+
