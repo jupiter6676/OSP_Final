@@ -2,15 +2,48 @@
 
 <html>
     <style>
+        hr {
+            border: none;
+            border-top: 3px dashed #2E2E2E;
+            height: 1px;
+            width: 97%;
+        }
+
+        .center {
+            margin-top: 20px;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .button {
+            background-color: #F6CED8;
+            border: none;
+            color: white;
+            border-radius: 50px;
+            padding: 12px 26px;
+            text-align: center;
+            font-size: 16px;
+            margin: 4px 2px;
+            opacity: 0.6;
+            transition: 0.3s;
+            display: inline-block;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            opacity: 1
+        }
+
         .list {
-            color: black;   /* 글자 */
+            color: #2E2E2E;   /* 글자 */
             background-color: #F8E0E6;  /* 배경 */
             margin-right: 50px;
-            margin-bottom: 10px;
+            /* margin-bottom: 10px; */
             font-size: 17px;
             border-top: 1.5px
-            solid black;    /* 위 테두리 */
-            line-height: 200%;
+            solid black;  /* 위 테두리 */
+            line-height: 250%;
         }
 
         ul {
@@ -18,31 +51,88 @@
         }
     </style>
 
-
     <head>
-        Project Analysis List
+        <!-- <script type = "text/javascript"
+            src="{{ url_for('static', filename='hello.js')}}"></script> -->
+        <title>
+            Web Page Analysis List
+        </title>
     </head>
 
     <body>
+        <div class="center">
+            <form method="POST" action="/box">
+                <font color = "#2E2E2E" size = "5px">
+                    Enter the URL &nbsp;&nbsp;</font>
+                <input name="wa" type="url" size="43" style="height: 35px;">
+                <button type="submit" class="button"> Submit </button>
+            </form></div>
+    
+        <div class="center">
+            <form method="POST" action="/txt" enctype="multipart/form-data">
+                <font color = "#2E2E2E" size = "5px">
+                    Submit the text file &emsp;</font>
+                <input name="file" type="file">
+                <button type="submit" class="button"> Upload </button>
+            </form>
+        </div>
+
+        <div class="center">
+            <form method="POST" action="/elastic" enctype="multipart/form-data">
+		        <font color = "#2E2E2E" size = "5px">
+		            http://127.0.0.1:9200/final/project/1?pretty </font>
+                <button type="submit" class="button"> ☆저장★ </button>
+            </form>
+        </div>
+
+        <hr>
+
+        <font color="#2E2E2E" size = "+2" style="margin-left: 50px">
+            Open Source Project Analysis List </font>
 
         <ul>
 
+            <!-- index -->
             <li><div class="list">
-                &emsp; URL &emsp; &emsp; &emsp; &emsp; word count  &emsp; time(sec)
+                &emsp;URL&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                word count&emsp;time(sec)&emsp;&emsp;&emsp;analysis&emsp;&emsp;&emsp;status
             </div></li>
 
+            <!-- list -->
             <li><div class="list">
-                {{wa}} &emsp; {{wc[0]}}
+                &emsp; {{wa}} &emsp; {{total}}&emsp;&emsp;
+                {{time}} &emsp;&emsp;&emsp;&emsp;{{status}}
+            
+                <h4> tf-idf </h4>
+                <h5> {{word}} </h5>
+                <h5> {{tf}} </h5>
+
                 <!-- 단어 분석 버튼 -->
-                <button onclick="window.open(
-                    'word.html', 'word', 
-                    'width=430, height=500, location=no, status=no, scrollbars=yes');"> 
-                    word </button>
+                <!-- <button onclick="javascript:popup()"></button> -->
+                <!-- <a href="javascript:popup()"></a> -->
+                <!-- <form method="GET" action="/wordanalysis">
+                    <input type="button" value="word analysis" 
+                    onclick="window.open('/wordanalysis', 'word analysis', 'width=430, height=500');">
+                </form> -->
                 
+                <!-- 이건 alert 형식으로 팝업창 띄워짐
+                <input type="button" onclick="sayHello()" value="say hello" /> -->
+                <!-- alert2 -->
+                
+                <!-- <a href="box" onclick="window.open(this.href, '_blank', 'width=430, height=500'); return false;"> word analysis</a> -->
+                
+                <!-- 
+                <form action="/wordanalysis", method="POST">
+                    <input type="button" value="word analysis"
+                    onclick="window.open('/wordanalysis', 'word analysis', 'width=430, height=500');">
+                </form> -->
+                
+                <!-- 그냥 있는 주소 넣으면 돌아가네... -->
+                <button type="button" onclick="alert('비교할 URL이 없습니다')"> word analysis </button>
+
+
                 <!-- 유사도 분석 버튼 -->
-                <button onclick="window.open(
-                'simi.html', 'word', 
-                'width=430, height=500, location=no, status=no, scrollbars=yes');"> 
+                <button > 
                 Similarity analysis </button>
                 <!-- return render_template('page.html', wa=myurl, 
                 word_list=w_list, freq=f_list, wc=word_count, status=success) -->
