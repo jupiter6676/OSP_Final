@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC “-//W3C//DTD HTML 4.0 Transitional//EN”>
+
+<html>
+    <style>
+        .list {
+            color: black;   /* 글자 */
+            background-color: #F8E0E6;  /* 배경 */
+            margin-right: 50px;
+            margin-bottom: 10px;
+            font-size: 17px;
+            border-top: 1.5px
+            solid black;    /* 위 테두리 */
+            line-height: 200%;
+        }
+
+        ul {
+            list-style: none;   /* 동그라미 없애기 */
+        }
+    </style>
+
+
+    <head>
+        Project Analysis List
+    </head>
+
+    <body>
+
+        <ul>
+
+            <li><div class="list">
+                &emsp; URL &emsp; &emsp; &emsp; &emsp; word count  &emsp; time(sec)
+            </div></li>
+
+            <li><div class="list">
+                {{wa}} &emsp; {{wc[0]}}
+                <!-- 단어 분석 버튼 -->
+                <button onclick="window.open(
+                    'word.html', 'word', 
+                    'width=430, height=500, location=no, status=no, scrollbars=yes');"> 
+                    word </button>
+                
+                <!-- 유사도 분석 버튼 -->
+                <button onclick="window.open(
+                'simi.html', 'word', 
+                'width=430, height=500, location=no, status=no, scrollbars=yes');"> 
+                Similarity analysis </button>
+                <!-- return render_template('page.html', wa=myurl, 
+                word_list=w_list, freq=f_list, wc=word_count, status=success) -->
+            </div></li>
+
+        </ul>
+
+    </body> 
+</html>
