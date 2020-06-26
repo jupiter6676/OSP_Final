@@ -41,6 +41,7 @@
     </head>
 
     <body>
+
         <div class="center">
             <form method="POST" action="/box">
                 <font color = "#2E2E2E" size = "5px">
@@ -56,8 +57,16 @@
                 <input name="file" type="file">
                 <button type="submit" class="button"> Upload </button>
             </form>
+
+            <div class="center">
+            <form method="POST" action="/elastic" enctype="multipart/form-data">
+		<font color = "#2E2E2E" size = "5px">
+		http://127.0.0.1:9200/final/project/1?pretty </font>
+                <button type="submit" class="button"> ☆저장★ </button>
+            </form>
         </div>
         
+
 	<h4> v1 : https://nutch.apache.org/ </h4>
 	<h4> v2 : http://attic.apache.org/ </h4>
 	<h4> v3 : https://brooklyn.apache.org/ </h4>
