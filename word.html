@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC “-//W3C//DTD HTML 4.0 Transitional//EN”>
+
+<html>
+    <style>
+        ul {
+            list-style: none;   /* 동그라미 없애기 */
+        }
+    </style>
+
+    <head>
+        <title> Word Analysis </title>
+    </head>
+
+    <body>
+        <h3 style="text-align: center;"> TF-IDF 기반 상위 Top 10 단어 리스트 </h3>
+
+        <ul>
+            <li><div>
+                <ol>
+                    {% for item in word %}
+                       <li> {{item}} <br></li> 
+                    {% endfor %}
+                </ol>
+            </div></li>
+        </ul>
+    </body>
+</html>
