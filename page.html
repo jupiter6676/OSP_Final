@@ -79,7 +79,7 @@
             <form method="POST" action="/elastic" enctype="multipart/form-data">
 		        <font color = "#2E2E2E" size = "5px">
 		            http://127.0.0.1:9200/final/project/1?pretty </font>
-                <button type="submit" class="button"> ☆저장★ </button>
+                <button type="submit" class="button"> Save ★ </button>
             </form>
         </div>
 
@@ -92,34 +92,17 @@
 
             <!-- index -->
             <li><div class="list">
-                &emsp;URL&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-                word count&emsp;time(sec)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-                status&emsp;&emsp;&emsp;analysis
+                &emsp;URL&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                word count&emsp;&emsp;time(sec)&emsp;&emsp;status
             </div></li>
 
             <!-- list -->
             <li><div class="list">
-                &emsp;{{wa}}&emsp;{{total}}&emsp;&emsp;
-                {{time}}&emsp;&emsp;&emsp;&emsp;{{status}}
+                &emsp;{{wa}}&emsp;&emsp;
+                &emsp;{{cnt}}&emsp;&emsp;&emsp;&emsp;{{time}}
+                &emsp;&emsp;{{status}}&emsp;
 
-                {% for item in txt %}
-                    {{item}} <br>
-                {% endfor %}
-                
-                {{time}}
-                <!-- 
-                {% for item in time %}
-                    {{item}} <br>
-                {% endfor %} -->
-
-                {% for item in sim %}
-                    {{item}} <br>
-                {% endfor %}
-
-                <!-- 단어 분석 버튼 -->
                 <button type="button" onclick="window.open('/tfidf', 'TF - IDF', 'width=430, height=500');"> word analysis </button>
-
-                <!-- 유사도 분석 버튼 -->
                 <button type="button" onclick="window.open('/cos', 'cosine similarity', 'width=430, height=500');"> cosine similarity </button>
 
             </div></li>
