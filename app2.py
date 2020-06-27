@@ -5,7 +5,7 @@ import re
 import sys
 import requests, time
 from bs4 import BeautifulSoup
-from flask import Flask, request, render_template, url_for
+from flask import Flask, request, render_template, url_for, redirect
 import numpy as np
 import math
 import nltk; nltk.download('punkt')
@@ -49,7 +49,6 @@ def clean_word_list(input_list):
     return output_list
 
 
-# 여기에 word_sum 넣어야 하는데,,,
 # { '단어' : '빈도수' }
 def process_new_sentence(input_list):
     sent_list.append(input_list)
@@ -159,6 +158,7 @@ def box():
     
     global v1, v2, v3, v4, dotpro_1, dotpro_2, dotpro_3, cosSimil_1, cosSimil_2, cosSimil_3
 
+    # 1
     myurl = request.form['wa']
     res = requests.get(myurl)
     html = BeautifulSoup(res.content, 'html.parser')
@@ -177,6 +177,10 @@ def box():
     
     process_new_sentence(clean_list)
     process_new_sentence_2(' '.join(clean_list))
+
+
+    #2
+
 
     # 누적 xxx
     global word_sum
@@ -362,6 +366,15 @@ def elastic():
     res = es.index(index='final', doc_type='project', id=1, body=doc)
 
     return render_template('page.html')
+
+
+@app.route('/tfidf')
+def tfidf():
+    return render_template('word.html', word=w_list)
+
+
+# @app.route('/cos')
+# def cos():
 
 
 if __name__ == '__main__':
