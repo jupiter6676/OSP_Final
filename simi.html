@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC “-//W3C//DTD HTML 4.0 Transitional//EN”>
+
+<html>
+    <style>
+        ul {
+            list-style: none;   /* 동그라미 없애기 */
+        }
+    </style>
+
+    <head>
+        <title> Cosine Similarity </title>
+    </head>
+
+    <body>
+        <h3 style="text-align: center;"> 현재 URL과 가장 유사한 Top 3 URL 리스트 </h3>
+
+        <ul>
+            <li><div>
+                {{sim1}}
+                {{sim2}}
+                {{sim3}}
+                <!-- <ol>
+                    {% for item in word %}
+                       <li> {{item}} <br></li> 
+                    {% endfor %}
+                </ol> -->
+            </div></li>
+        </ul>
+    </body>
+</html>
