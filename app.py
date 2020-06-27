@@ -3,14 +3,15 @@
 
 import re
 import sys
-import requests
+import requests, time
 from bs4 import BeautifulSoup
-from flask import Flask, request, render_template, url_for
+from flask import Flask, request, render_template, url_for, redirect
 import numpy as np
 import math
 import nltk; nltk.download('punkt')
 from nltk import word_tokenize
 from elasticsearch import Elasticsearch
+from werkzeug.utils import secure_filename
 
 
 app = Flask(__name__, static_url_path='/static')
@@ -23,7 +24,8 @@ word_d_2 = {}
 sent_list = []
 sent_list_2 = []
 
-# global로 바꾸자
+word_sum = 0
+
 v1 = []; v2 = []; v3 = []; v4 = []
 dotpro_1 = 0; dotpro_2 = 0; dotpro_3 = 0
 cosSimil_1 = 0; cosSimil_2 = 0; cosSimil_3 = 0
@@ -34,34 +36,36 @@ tf_list = []
 
 
 
-
 # 특수문자 제거 (공백 제외)
 def clean_word_list(input_list):
+	output_list = []
+    
+	for word in input_list:
+		symbols = """!•@#$%^&*()_-+={[}]|\\;:"‘'·<>?/.,"""
+        
+		for i in range(len(symbols)):
+			word = word.replace(symbols[i], '')
+            
+		if len(word) > 0 :
+			output_list.append(word)
+            
+	return output_list
 
-    output_list = []
 
-    for word in input_list:
-        symbols = """!•@#$%^&*()_-+={[}]|\\;:"‘'·<>?/.,"""
-
-        for i in range(len(symbols)):
-            word = word.replace(symbols[i], '')
-
-        if len(word) > 0 :
-            output_list.append(word)
-
-    return output_list
-
-
-# { '단어' : '빈도수' }
+# { '단어' : '빈도수' } - cos용
 def process_new_sentence(input_list):
-
 	sent_list.append(input_list)
 
+	global word_sum
+
+	word_sum = 0
+    
 	for word in input_list:
+		word_sum += 1
 
 		if word in word_d:
 			word_d[word] += 1
-
+            
 		else:
 			word_d[word] = 0
 
@@ -70,31 +74,30 @@ def process_new_sentence(input_list):
 
 # 길이가 같은 벡터 만들기
 def make_vector(i, input_list):
-
 	v = []
 	s = sent_list[i]
 
 	for word in word_d.keys():
-
 		val = 0
-
+        
 		for t in input_list:
-			if t == word:	val += 1
+			if t == word:
+				val += 1
 
 		v.append(val)
-
+    
 	return v
 
 
 # { '단어' : '빈도수' } - tf-idf용
-def process_new_sentence_2(input_list):
-		
+def process_new_sentence_2(input_list):	
+
 	sent_list_2.append(input_list)
-
+    
 	tokenized = word_tokenize(input_list)
-
+    
 	for word in tokenized:
-
+        
 		if word not in word_d_2.keys():
 			word_d_2[word] = 0
 
@@ -103,74 +106,68 @@ def process_new_sentence_2(input_list):
 
 # tf 계산
 def compute_tf(input_list):	# sent_list를 input으로
-
 	bow = set()
 	wordcount_d = {}
 
 	tokenized = word_tokenize(input_list)
-	
+    
 	for tok in tokenized:
-
 		if tok not in wordcount_d.keys():
 			wordcount_d[tok] = 0
-
+            
 		wordcount_d[tok] += 1
-
+        
 		bow.add(tok)
-
-
+        
 	tf_d = {}
-
+    
 	for word, count in wordcount_d.items():
-
 		tf_d[word] = count / len(bow)
-
+        
 	return tf_d
 
 
 # idf 계산
 def compute_idf():
-
 	Dval = len(sent_list_2)
 	bow = set()
-
+    
 	for i in range(0, len(sent_list_2)):
-
 		tokenized = word_tokenize(sent_list_2[i])
-
+        
 		for tok in tokenized:
 			bow.add(tok)
-
-
+            
 	idf_d = {}
-
+    
 	for t in bow:
-
 		cnt = 0
-
+        
 		for s in sent_list_2:
-
 			if t in word_tokenize(s):
 				cnt += 1
-
+                
 				idf_d[t] = math.log(Dval/cnt)
-
+                
 	return idf_d
+
+
 
 
 # 시작 화면
 @app.route('/')
-
 def index():
-    return render_template('home.html')
+	return render_template('home.html')
 
 
 # 단일 URL 입력
 @app.route('/box', methods=['POST'])
-
 def box():
-
+	# 시작 시간
+	start = time.time()
+    
 	global v1, v2, v3, v4, dotpro_1, dotpro_2, dotpro_3, cosSimil_1, cosSimil_2, cosSimil_3
+
 	# 1 (기준)
 	url = requests.get("https://nutch.apache.org/")
 	html = BeautifulSoup(url.content, 'html.parser')
@@ -195,6 +192,9 @@ def box():
 
 	process_new_sentence(clean_list)
 	process_new_sentence_2(' '.join(clean_list))
+
+
+	cnt = word_sum
 
 
 
@@ -224,6 +224,9 @@ def box():
 	process_new_sentence_2(' '.join(clean_list_2))
 
 
+	cnt2 = word_sum
+
+
 
 	# 3
 	url_3 = requests.get("https://brooklyn.apache.org/")
@@ -251,6 +254,9 @@ def box():
 	process_new_sentence_2(' '.join(clean_list_3))
 
 
+	cnt3 = word_sum
+
+
 
 	# 4
 	url_4 = requests.get("https://allura.apache.org/")
@@ -276,6 +282,9 @@ def box():
 
 	process_new_sentence(clean_list_4)
 	process_new_sentence_2(' '.join(clean_list_4))
+
+
+	cnt4 = word_sum
 
 
 
@@ -321,9 +330,6 @@ def box():
 
 	count = 0
 
-	# w_list = []
-	# tf_list = []
-
 	while count < 10:
 
 		w_list.append(dic[count][0])
@@ -331,157 +337,60 @@ def box():
 
 		count = count + 1
 
+        
+	success = "success"
+    
+	mytime = time.time() - start    # 처리 시간
+	mytime = format(mytime, ".2f")       # 소수점 셋째 자리까지
 
 
-	return render_template('home.html', sim1 = cosSimil_1, sim2 = cosSimil_2, sim3 = cosSimil_3, word = w_list, tf = tf_list)
-
-
-
-
+	return render_template('page.html', wa="https://nutch.apache.org/", status=success, cnt=cnt, time=mytime)
+    
 
 # txt 파일 입력
 @app.route('/txt', methods=['POST'])
 def txt():
-    # 주소 받는 거
-    # # submit 시 request 된 파일 데이터 처리
-    # f = request.files['file']
 
-    # # 이렇게 하면 앞에 b' 뒤에 \n' 이 붙어서 나옴
-    # myurl2 = []
-    # for lines in f:
-    #     myurl2.append(lines)
-
-    # return render_template('home.html', file=myurl2)
-
-    #1 기준
-    url = requests.get("https://nutch.apache.org/")
-    html = BeautifulSoup(url.content, 'html.parser')
-
-    body = html.select('body')
-
-    word = []
-
-    for tag in body:
-        word.append(tag.get_text().strip())
-    
-    # word를 문자열로 변환 후, 공백 기준으로 나누기
-    word_list = []
-    word_list = ''.join(word).lower().split
-
-    clean_list = []
-    clean_list = clean_word_list(word_list)
-
-    process_new_sentence(clean_list)
+	start = time.time()
 
 
-    #2
-    url_2 = requests.get("http://attic.apache.org/")
-    html_2 = BeautifulSoup(url_2.content, 'html.parser')
+	# 파일 입력
+	f = request.files['file']
+	f.save(secure_filename(f.filename))
 
-    body_2 = html_2.select('body')
+	fp = open(f.filename, 'r')
+	mytxt = fp.readlines()
+	fp.close()
 
-    word_2 = []	# 맨 처음 크롤링한 데이터
-
-    for tag in body_2:
-        word_2.append(tag.get_text().strip())
-
-    word_list_2 = []
-    word_list_2 = ''.join(word_2).lower().split()	# 공백 기준으로 나누기
-
-    clean_list_2 = []
-    clean_list_2 = clean_word_list(word_list_2)	# 특수 문자 제거
-
-    process_new_sentence(clean_list_2)
+	new_txt = []
+	for lines in mytxt:
+		new_txt.append(lines)
 
 
-    # 3
-    url_3 = requests.get("https://brooklyn.apache.org/")
-    html_3 = BeautifulSoup(url_3.content, 'html.parser')
+	mytime = time.time() - start
+	mytime = round(mytime, 3)
 
-    body_3 = html_3.select('body')
-
-    word_3 = []	# 맨 처음 크롤링한 데이터
-
-    for tag in body_3:
-        word_3.append(tag.get_text().strip())
-
-    word_list_3 = []
-    word_list_3 = ''.join(word_3).lower().split()	# 공백 기준으로 나누기
-
-    clean_list_3 = []
-    clean_list_3 = clean_word_list(word_list_3)	# 특수 문자 제거
-
-    process_new_sentence(clean_list_3)
+	return render_template('page.html')
 
 
-    # 4
-    url_4 = requests.get("https://allura.apache.org/")
-    html_4 = BeautifulSoup(url_4.content, 'html.parser')
 
-    body_4 = html_4.select('body')
-
-    word_4 = []	# 맨 처음 크롤링한 데이터
-
-    for tag in body_4:
-        word_4.append(tag.get_text().strip())
-
-    word_list_4 = []
-    word_list_4 = ''.join(word_4).lower().split()	# 공백 기준으로 나누기
-
-    clean_list_4 = []
-    clean_list_4 = clean_word_list(word_list_4)	# 특수 문자 제거
-
-    process_new_sentence(clean_list_4)
+@app.route('/tfidf')
+def tfidf():
+    return render_template('word.html', word=w_list)
 
 
-    # 벡터 길이 같게 하기 위해 마지막에 생성
-    #print(sent_list[0])
-    v1 = np.array(make_vector(0, clean_list))
-    #print(v1)
 
+@app.route('/cos')
+def cos():
+    return render_template('simi.html', url1="http://attic.apache.org/", url2="https://brooklyn.apache.org/", url3="https://allura.apache.org/", sim1=cosSimil_1, sim2=cosSimil_2, sim3=cosSimil_3)
 
-    #print(sent_list[1])
-    v2 = np.array(make_vector(1, clean_list_2))
-    #print(v2)
-
-
-    #print(sent_list[2])
-    v3 = np.array(make_vector(2, clean_list_3))
-    #print(v3)
-
-
-    #print(sent_list[3])
-    v4 = np.array(make_vector(3, clean_list_4))
-    #print(v4)
-
-    dotpro_1 = np.dot(v1, v2)
-    cosSimil_1 = dotpro_1 / (sum(v1**2) * sum(v2**2))
-
-    #print(dotpro_1)
-    #print("Cosine Similarity (v1, v2) : ", cosSimil_1)
-
-    dotpro_2 = np.dot(v1, v3)
-    cosSimil_2 = dotpro_2 / (sum(v1**2) * sum(v3**2))
-
-    #print(dotpro_2)
-    #print("Cosine Similarity (v1, v3) : ", cosSimil_2)
-
-    dotpro_3 = np.dot(v1, v4)
-    cosSimil_3 = dotpro_3 / (sum(v1**2) * sum(v4**2))
-
-    #print(dotpro_3)
-    #print("Cosine Similarity (v1, v4) : ", cosSimil_3)
-    return render_template('home.html', sim1 = cosSimil_1, sim2 = cosSimil_2, sim3 = cosSimil_3)
 
 
 
 @app.route('/elastic', methods = ['POST'])
-
 def elastic():
-
 	es_host = "127.0.0.1"
 	es_port = "9200"
-	# http://127.0.0.1:9200/final/project/1?pretty
 
 	es = Elasticsearch([{'host': es_host, 'port': es_port}], timeout=30)
 
@@ -503,23 +412,10 @@ def elastic():
 		"tf-idf list": tf_list
 	}
 
-
-	res = es.index(index="final", doc_type="project", id=1, body=doc)
+	res = es.index(index='final', doc_type='project', id=1, body=doc)
 
 	return render_template('home.html')
 
 
 if __name__ == '__main__':
-
-	
-
 	app.run(debug=True)
-
-	
-    # with open(url_for('static'), filename=file) as f:
-    #     for line in f:
-    #         str = line
-    #         arr = str.split('\n')
-
-
-
