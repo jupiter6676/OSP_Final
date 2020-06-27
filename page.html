@@ -52,8 +52,6 @@
     </style>
 
     <head>
-        <!-- <script type = "text/javascript"
-            src="{{ url_for('static', filename='hello.js')}}"></script> -->
         <title>
             Web Page Analysis List
         </title>
@@ -95,47 +93,21 @@
             <!-- index -->
             <li><div class="list">
                 &emsp;URL&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-                word count&emsp;time(sec)&emsp;&emsp;&emsp;analysis&emsp;&emsp;&emsp;status
+                word count&emsp;time(sec)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                status&emsp;&emsp;&emsp;analysis
             </div></li>
 
             <!-- list -->
             <li><div class="list">
-                &emsp; {{wa}} &emsp; {{total}}&emsp;&emsp;
-                {{time}} &emsp;&emsp;&emsp;&emsp;{{status}}
-            
-                <h4> tf-idf </h4>
-                <h5> {{word}} </h5>
-                <h5> {{tf}} </h5>
+                &emsp;{{wa}}&emsp;{{total}}&emsp;&emsp;
+                {{time}}&emsp;&emsp;&emsp;&emsp;{{status}}
 
                 <!-- 단어 분석 버튼 -->
-                <!-- <button onclick="javascript:popup()"></button> -->
-                <!-- <a href="javascript:popup()"></a> -->
-                <!-- <form method="GET" action="/wordanalysis">
-                    <input type="button" value="word analysis" 
-                    onclick="window.open('/wordanalysis', 'word analysis', 'width=430, height=500');">
-                </form> -->
-                
-                <!-- 이건 alert 형식으로 팝업창 띄워짐
-                <input type="button" onclick="sayHello()" value="say hello" /> -->
-                <!-- alert2 -->
-                
-                <!-- <a href="box" onclick="window.open(this.href, '_blank', 'width=430, height=500'); return false;"> word analysis</a> -->
-                
-                <!-- 
-                <form action="/wordanalysis", method="POST">
-                    <input type="button" value="word analysis"
-                    onclick="window.open('/wordanalysis', 'word analysis', 'width=430, height=500');">
-                </form> -->
-                
-                <!-- 그냥 있는 주소 넣으면 돌아가네... -->
-                <button type="button" onclick="alert('비교할 URL이 없습니다')"> word analysis </button>
-
+                <button type="button" onclick="window.open('/tfidf', 'TF - IDF', 'width=430, height=500');"> word analysis </button>
 
                 <!-- 유사도 분석 버튼 -->
-                <button > 
-                Similarity analysis </button>
-                <!-- return render_template('page.html', wa=myurl, 
-                word_list=w_list, freq=f_list, wc=word_count, status=success) -->
+                <button type="button" onclick="window.open('/cos', 'cosine similarity', 'width=430, height=500');"> cosine similarity </button>
+
             </div></li>
 
         </ul>
